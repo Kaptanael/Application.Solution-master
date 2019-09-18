@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Application.Data">
+      <HintPath>..\Application.Data\bin\Debug\netcoreapp2.2\Application.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Application.Model">
+      <HintPath>..\Application.Model\bin\Debug\netcoreapp2.2\Application.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="Application.ViewModel">
+      <HintPath>..\Application.ViewModel\bin\Debug\netcoreapp2.2\Application.ViewModel.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
