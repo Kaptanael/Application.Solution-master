@@ -1,7 +1,8 @@
-﻿using Application.Service;
-using Application.Data.DataContext;
+﻿using Application.Data.DataContext;
 using Application.Data.Repository;
 using Application.Data.UnitOfWork;
+using Application.Service;
+using Application.Service.Mapper;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -12,8 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
-using Application.Service.Mapper;
 
 namespace Application.Api
 {
@@ -25,13 +26,18 @@ namespace Application.Api
         }
 
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Asp.net Core API", Description="Asp.net Core Web API", Version = "v1" });
+            });
 
             services.AddCors();
 
@@ -74,7 +80,7 @@ namespace Application.Api
             }
             else
             {
-                logger.LogInformation($"Environment: {env.EnvironmentName}");               
+                logger.LogInformation($"Environment: {env.EnvironmentName}");
                 app.UseHsts();
             }
 
@@ -83,6 +89,13 @@ namespace Application.Api
             app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Asp.net Core Web API V1");                
+            });
 
             app.UseMvc();
         }

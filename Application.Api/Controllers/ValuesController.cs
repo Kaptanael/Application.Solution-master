@@ -13,14 +13,12 @@ namespace Application.Api.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly IValueService _valueService;        
-        private readonly ILogger _logger;
-        private readonly IMapper _mapper;
+        private readonly ILogger _logger;        
 
         public ValuesController(IValueService valueService , ILogger<ValuesController> logger, IMapper mapper)
         {
             _valueService = valueService;            
-            _logger = logger;
-            _mapper = mapper;
+            _logger = logger;            
         }
         
         [HttpGet]
@@ -28,6 +26,7 @@ namespace Application.Api.Controllers
         {   
             try
             {
+
                 var values = await _valueService.GetAllAsync();
                 return Ok(values);
             }

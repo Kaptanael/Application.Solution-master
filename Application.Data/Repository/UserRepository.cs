@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Data.DataContext;
 using Application.Model;
+using System.Threading;
 
 namespace Application.Data.Repository
 {
@@ -34,9 +35,9 @@ namespace Application.Data.Repository
             return users;
         }
 
-        public async Task<User> Login(string email, string password)
+        public async Task<User> Login(string email, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
             if (user == null)
             {
@@ -69,7 +70,7 @@ namespace Application.Data.Repository
             return true;
         }
 
-        public async Task<User> Register(User user, string password)
+        public async Task<User> Register(User user, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             byte[] passwordHash, passwordSalt;
 
@@ -79,7 +80,7 @@ namespace Application.Data.Repository
             user.PasswordSalt = passwordSalt;
 
             await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return user;
         }
@@ -93,9 +94,9 @@ namespace Application.Data.Repository
             }
         }
 
-        public async Task<bool> UserExists(string email)
+        public async Task<bool> UserExists(string email, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (await _context.Users.AnyAsync(u => u.Email == email))
+            if (await _context.Users.AnyAsync(u => u.Email == email,cancellationToken))
             {
                 return true;
             }
