@@ -15,7 +15,7 @@ namespace Application.Api.Controllers
         private readonly IValueService _valueService;        
         private readonly ILogger _logger;        
 
-        public ValuesController(IValueService valueService , ILogger<ValuesController> logger, IMapper mapper)
+        public ValuesController(IValueService valueService , ILogger<ValuesController> logger)
         {
             _valueService = valueService;            
             _logger = logger;            
