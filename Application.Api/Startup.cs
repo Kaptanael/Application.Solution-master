@@ -54,6 +54,7 @@ namespace Application.Api
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddTransient<IValueService, ValueService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

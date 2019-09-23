@@ -17,9 +17,9 @@ namespace Application.Data.Repository
             _context = context;
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _context.AddAsync(entity);
+            await _context.AddAsync(entity, cancellationToken);
             return entity;
         }
 

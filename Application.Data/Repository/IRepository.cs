@@ -6,7 +6,7 @@ namespace Application.Data.Repository
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        Task<TEntity> AddAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken));
 
         TEntity Update(TEntity entity);
 

@@ -57,8 +57,7 @@ namespace Application.Data.Repository
                             Description = task.Description,
                             StartDate = task.StartDate,
                             EndDate = task.EndDate,
-                            UserId = task.UserId,
-                            UserName = user.FirstName + " " + user.LastName
+                            UserId = task.UserId                           
                         };            
 
             return await tasks.ToListAsync();

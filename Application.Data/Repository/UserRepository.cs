@@ -21,23 +21,11 @@ namespace Application.Data.Repository
         public ApplicationDbContext TaskManagementDbContext
         {
             get { return _context as ApplicationDbContext; }
-        }
+        }       
         
-        public async Task<object> GetAllUserName()
+        public async Task<User> Login(string userName, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var users = await _context.Users
-                .Select(u => new
-                {
-                    u.Id,
-                    Name = u.FirstName + u.LastName,
-                }).ToListAsync();
-
-            return users;
-        }
-
-        public async Task<User> Login(string email, string password, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName, cancellationToken);
 
             if (user == null)
             {
@@ -94,9 +82,9 @@ namespace Application.Data.Repository
             }
         }
 
-        public async Task<bool> UserExists(string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> UserExists(string userName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (await _context.Users.AnyAsync(u => u.Email == email,cancellationToken))
+            if (await _context.Users.AnyAsync(u => u.UserName == userName, cancellationToken))
             {
                 return true;
             }

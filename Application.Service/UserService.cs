@@ -21,13 +21,16 @@ namespace Application.Service
         }
         public async Task<bool> Login(string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var userToLogin = await _uow.Users.Login(username, password);
+            var userToLogin = await _uow.Users.Login(username, password);            
             return true;
         }
 
         public async Task<bool> Register(UserForRegisterDto userForRegisterDto, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var userToRegistered = _mapper.Map<User>(userForRegisterDto);
+            var userToRegistered = new User
+            {
+                UserName = userForRegisterDto.Username
+            };
             await _uow.Users.Register(userToRegistered, password, cancellationToken);
             return true;
         }
