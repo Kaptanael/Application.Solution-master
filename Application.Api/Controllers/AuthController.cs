@@ -40,39 +40,18 @@ namespace Application.Api.Controllers
                     return BadRequest();
                 }
 
-                var user = await _userService.Login(userForLoginDto.UserName.ToLower(), userForLoginDto.Password);
+                var user = await _userService.UserExists(userForLoginDto.UserName.ToLower(), userForLoginDto.Password);
 
                 if (user == null)
                 {
                     return Unauthorized();
                 }
 
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name,user.UserName)                    
-                };
+                var secrectKey = _configuration.GetSection("AppSettings:Token").Value;
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+                var userAuth =  _userService.Login(user, secrectKey);
 
-                var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.Now.AddDays(1),
-                    SigningCredentials = credential
-                };
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-
-                return Ok(new
-                {
-                    token = tokenHandler.WriteToken(token),
-                    id = user.Id.ToString()                    
-                });                
+                return Ok(userAuth);
             }
             catch (Exception ex)
             {

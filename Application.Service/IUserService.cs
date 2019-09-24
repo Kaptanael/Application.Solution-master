@@ -12,8 +12,10 @@ namespace Application.Service
     {
         Task<bool> Register(UserForRegisterDto user, string password, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<User> Login(string username, string password, CancellationToken cancellationToken = default(CancellationToken));
+        Task<User> UserExists(string username, string password, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<bool> UserExists(string email, CancellationToken cancellationToken = default(CancellationToken));
+
+        object Login(User user, string secrectKey);
     }
 }
