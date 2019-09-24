@@ -1,4 +1,5 @@
-﻿using Application.ViewModel.User;
+﻿using Application.Model;
+using Application.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Application.Service
     {
         Task<bool> Register(UserForRegisterDto user, string password, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<bool> Login(string username, string password, CancellationToken cancellationToken = default(CancellationToken));
+        Task<User> Login(string username, string password, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<bool> UserExists(string email, CancellationToken cancellationToken = default(CancellationToken));
     }

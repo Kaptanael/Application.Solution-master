@@ -19,10 +19,10 @@ namespace Application.Service
             _uow = uow;
             _mapper = mapper;
         }
-        public async Task<bool> Login(string username, string password, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<User> Login(string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             var userToLogin = await _uow.Users.Login(username, password);            
-            return true;
+            return userToLogin;
         }
 
         public async Task<bool> Register(UserForRegisterDto userForRegisterDto, string password, CancellationToken cancellationToken = default(CancellationToken))
