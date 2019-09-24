@@ -21,18 +21,13 @@ namespace Application.Service
         {
             _uow = uow;
             _mapper = mapper;
-        }
-        public async Task<User> UserExists(string username, string password, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var userToLogin = await _uow.Users.Login(username, password);            
-            return userToLogin;
-        }
+        }        
 
-        public async Task<bool> Register(UserForRegisterDto userForRegisterDto, string password, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Register(UserForRegisterRequest userForRegisterRequest, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             var userToRegistered = new User
             {
-                UserName = userForRegisterDto.Username
+                UserName = userForRegisterRequest.Username
             };
             await _uow.Users.Register(userToRegistered, password, cancellationToken);
             return true;
@@ -43,12 +38,19 @@ namespace Application.Service
            return await _uow.Users.UserExists(email, cancellationToken);            
         }
 
-        public object Login(User user,string secrectKey)
+        public async Task<UserForLoginResponse> GenerateTokenAsync(string username, string password, string secrectKey)
         {
+            var userToLogin = await _uow.Users.Login(username, password);
+
+            if (userToLogin == null)
+            {
+                return null;
+            }
+
             var claims = new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name,user.UserName)
+                    new Claim(ClaimTypes.NameIdentifier, userToLogin.Id.ToString()),
+                    new Claim(ClaimTypes.Name,userToLogin.UserName)
                 };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secrectKey));
@@ -66,12 +68,12 @@ namespace Application.Service
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new UserForAuthDto
+            return new UserForLoginResponse
             {
                 Token = tokenHandler.WriteToken(token),
-                Id = user.Id.ToString(),
-                UserName = user.UserName
+                Id = userToLogin.Id.ToString(),
+                UserName = userToLogin.UserName
             };
-        }
+        }        
     }
 }

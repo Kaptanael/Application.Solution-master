@@ -10,12 +10,10 @@ namespace Application.Service
 {
     public interface IUserService
     {
-        Task<bool> Register(UserForRegisterDto user, string password, CancellationToken cancellationToken = default(CancellationToken));
-
-        Task<User> UserExists(string username, string password, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> Register(UserForRegisterRequest user, string password, CancellationToken cancellationToken = default(CancellationToken));        
 
         Task<bool> UserExists(string email, CancellationToken cancellationToken = default(CancellationToken));
 
-        object Login(User user, string secrectKey);
+        Task<UserForLoginResponse> GenerateTokenAsync(string username, string password, string secrectKey);
     }
 }

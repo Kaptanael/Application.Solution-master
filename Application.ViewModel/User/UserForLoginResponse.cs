@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Application.ViewModel.User
 {
-    public class UserForAuthDto
+    public class UserForLoginResponse
     {
         public string Id { get; set; }
         public string UserName { get; set; }

@@ -13,7 +13,7 @@ namespace Application.Service.Mapper
     {
         public MappingProfile()
         {            
-            CreateMap<UserForRegisterDto, User>().ReverseMap();
+            CreateMap<UserForRegisterRequest, User>().ReverseMap();
             CreateMap<ValueForCreateDto, Value>();
             CreateMap<ValueForUpdateDto, Value>();
             CreateMap<ValueForDeleteDto, Value>();            

@@ -31,27 +31,23 @@ namespace Application.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
+        public async Task<IActionResult> Login([FromBody] UserForLoginRequest userForLoginRequest)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     return BadRequest();
-                }
+                }            
 
-                var user = await _userService.UserExists(userForLoginDto.UserName.ToLower(), userForLoginDto.Password);
+                var userToLogin =  await _userService.GenerateTokenAsync(userForLoginRequest.UserName.ToLower(), userForLoginRequest.Password, _configuration.GetSection("AppSettings:Token").Value);
 
-                if (user == null)
+                if (userToLogin == null)
                 {
                     return Unauthorized();
                 }
 
-                var secrectKey = _configuration.GetSection("AppSettings:Token").Value;
-
-                var userAuth =  _userService.Login(user, secrectKey);
-
-                return Ok(userAuth);
+                return Ok(userToLogin);
             }
             catch (Exception ex)
             {
@@ -61,7 +57,7 @@ namespace Application.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
+        public async Task<IActionResult> Register([FromBody] UserForRegisterRequest userForRegisterRequest)
         {
             try
             {
@@ -70,7 +66,7 @@ namespace Application.Api.Controllers
                     return BadRequest();
                 }
 
-                await _userService.Register(userForRegisterDto, userForRegisterDto.Password);
+                await _userService.Register(userForRegisterRequest, userForRegisterRequest.Password);
                 return StatusCode(201);
             }
             catch (Exception ex)
